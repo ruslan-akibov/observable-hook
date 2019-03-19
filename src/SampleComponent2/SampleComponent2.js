@@ -1,6 +1,9 @@
 import React from 'react';
 import { SampleStore } from 'store';
 
+// we can 'store' observable values an use them later
+const arrRef = SampleStore.arrValue;
+
 export default
 class SampleComponent2 extends React.Component {
     render() {
@@ -8,6 +11,7 @@ class SampleComponent2 extends React.Component {
             <div>
                 <div>Second component:</div>
                 <button type="button" onClick={() => SampleStore.pushValue()}>Push +1</button>
+                <button type="button" onClick={() => arrRef.push(Math.random())}>Push +Random</button>
             </div>
         )
     }
