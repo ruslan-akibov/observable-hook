@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { observable, autorun } from 'mobx';
 
-export default function useObservable(source) {
-    Object.keys(source).forEach(prop => {
-        let desc = Object.getOwnPropertyDescriptor(source, prop);
-        desc = observable(source, prop, desc);
-        Object.defineProperty(source, prop, desc);
+export default function useObservable(target) {
+    Object.keys(target).forEach(prop => {
+        let desc = Object.getOwnPropertyDescriptor(target, prop);
+        desc = observable(target, prop, desc);
+        Object.defineProperty(target, prop, desc);
     });
-
-    const target = source;
 
     let connectedComponents = [];
 
@@ -21,9 +19,9 @@ export default function useObservable(source) {
 
         const current = JSON.stringify(target);
         if (current !== previous) {
-            connectedComponents.forEach(f => {
-                f(Math.random());
-            });
+            connectedComponents.forEach(f => f(Math.random()));
+
+            previous = current;
         }
     });
 
