@@ -12,23 +12,19 @@ export default function useObservable(target) {
 
     let previous = null;
     autorun(function() {
-        if (!previous) {
-            previous = JSON.stringify(target);
-            return;
-        }
-
         const current = JSON.stringify(target);
-        if (current !== previous) {
-            connectedComponents.forEach(f => f(Math.random()));
 
-            previous = current;
+        if (previous && current !== previous) {
+            connectedComponents.forEach(f => f({}));
         }
+
+        previous = current;
     });
 
     return [
         target,
         function() {
-            const invokeRender = useState(target)[1];
+            const invokeRender = useState({})[1];
 
             useEffect(function() {
                 connectedComponents.push(invokeRender);
