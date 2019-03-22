@@ -1,9 +1,11 @@
 import React from 'react';
-import { useSampleStore } from 'store';
+import { use, SampleStore } from 'store';
 
 export default
 function SampleComponent() {
-    const SampleStore = useSampleStore();
+    use(SampleStore);
+    // or
+    // const { value, arrValue } = use(SampleStore);
 
     return (
         <div>

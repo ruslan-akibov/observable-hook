@@ -1,7 +1,5 @@
-import useObservable from './observable-hook';
+export { use } from './observable-hook';
+import { create } from './observable-hook';
 
 import SampleStoreClass from './SampleStore';
-export const [
-    SampleStore,
-    useSampleStore
-] = useObservable(new SampleStoreClass());
+export const SampleStore = create(new SampleStoreClass());

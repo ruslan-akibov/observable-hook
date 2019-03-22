@@ -1,37 +1,38 @@
 import { useState, useEffect } from 'react';
 import { observable, autorun } from 'mobx';
 
-export default function useObservable(target) {
-    Object.keys(target).forEach(prop => {
-        let desc = Object.getOwnPropertyDescriptor(target, prop);
-        desc = observable(target, prop, desc);
-        Object.defineProperty(target, prop, desc);
+const OBSERVERS = Symbol('observers');
+
+export function create(source) {
+    Object.keys(source).forEach(prop => {
+        let desc = Object.getOwnPropertyDescriptor(source, prop);
+        desc = observable(source, prop, desc);
+        Object.defineProperty(source, prop, desc);
     });
 
-    let connectedComponents = [];
+    source[OBSERVERS] = [];
 
     let previous = null;
     autorun(function() {
-        const current = JSON.stringify(target);
+        const current = JSON.stringify(source);
 
         if (previous && current !== previous) {
-            connectedComponents.forEach(f => f({}));
+            source[OBSERVERS].forEach(f => f({}));
         }
 
         previous = current;
     });
 
-    return [
-        target,
-        function() {
-            const invokeRender = useState({})[1];
+    return source;
+}
 
-            useEffect(function() {
-                connectedComponents.push(invokeRender);
-                return () => (connectedComponents = connectedComponents.filter(f => f !== invokeRender));
-            });
+export function use(source) {
+    const invokeRender = useState({})[1];
 
-            return target;
-        }
-    ]
+    useEffect(function() {
+        source[OBSERVERS].push(invokeRender);
+        return () => (source[OBSERVERS] = source[OBSERVERS].filter(f => f !== invokeRender));
+    });
+
+    return source;
 }
