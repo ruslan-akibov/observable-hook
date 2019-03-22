@@ -3,7 +3,7 @@ import { observable, autorun } from 'mobx';
 
 const OBSERVERS = Symbol('observers');
 
-export function create(source) {
+function create(source) {
     Object.keys(source).forEach(prop => {
         let desc = Object.getOwnPropertyDescriptor(source, prop);
         desc = observable(source, prop, desc);
@@ -27,12 +27,21 @@ export function create(source) {
 }
 
 export function use(source) {
-    const invokeRender = useState({})[1];
+    if (!source[OBSERVERS]) {
+        create(source);
+    }
 
-    useEffect(function() {
-        source[OBSERVERS].push(invokeRender);
-        return () => (source[OBSERVERS] = source[OBSERVERS].filter(f => f !== invokeRender));
-    });
+    let invokeRender = null;
+    try {
+        invokeRender = useState({})[1];
+    } catch (error) { return source }
+
+    if (invokeRender) {
+        useEffect(function() {
+            source[OBSERVERS].push(invokeRender);
+            return () => (source[OBSERVERS] = source[OBSERVERS].filter(f => f !== invokeRender));
+        });
+    }
 
     return source;
 }

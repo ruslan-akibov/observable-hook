@@ -1,7 +1,9 @@
 import React from 'react';
-import { SampleStore } from 'store';
+import { use, SampleStore } from 'store';
 
 // we can 'store' observable values an use them later
+// BUT!!! after first 'use'
+use(SampleStore);
 const arrRef = SampleStore.arrValue;
 
 export default
