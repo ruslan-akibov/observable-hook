@@ -1,3 +1,7 @@
+import { use } from 'observable-hook';
+import { AJAX_fetch, AJAX_store, loading } from 'lib';
+
+
 class TaskListBasic {
     tasks = [];
     isLoading = false;
@@ -11,9 +15,8 @@ class TaskListBasic {
         this.tasks = await AJAX_fetch('todo-tasks') || []
     }
 
-    // why
     async save() {
-        this.tasks = this.tasks.sort(( a, b ) => { return (( a.name < b.name )? 1 : -1) });
+        this.tasks.sort(( a, b ) => { return (( a.name < b.name )? 1 : -1) });
         await AJAX_store('todo-tasks', this.tasks)
     }
 
@@ -21,13 +24,7 @@ class TaskListBasic {
     async append(name, description) {
         const id = Math.random();
 
-        this.tasks.push({
-            id,
-            name,
-            description,
-            marked: false,
-            locked: false
-        });
+        this.tasks.push({ id });
 
         await this.update(id, name, description)
     }
@@ -69,30 +66,5 @@ class TaskList extends TaskListBasic {
 
 export default new TaskList();
 
-
-
-// libs
-function AJAX_fetch(key) {
-    return new Promise(r => setTimeout(() => r(JSON.parse(localStorage[key] || '""')), 1000))
-}
-
-function AJAX_store(key, value) {
-    return new Promise(r => setTimeout(() => { localStorage[key] = JSON.stringify(value); r(); }, 2000))
-
-}
-
-function loading(elementDescriptor) {
-    const propertyDescriptor = elementDescriptor.descriptor;
-
-    const original = propertyDescriptor.value;
-
-    propertyDescriptor.value = async function(...args) {
-        this.isLoading = true;
-        const result = await original.apply(this, args);
-        this.isLoading = false;
-
-        return result;
-    }
-
-    return elementDescriptor;
-}
+// export default use(new TaskList());
+// you MUST!!! do it if you want to 'store' or 'extend' root props
