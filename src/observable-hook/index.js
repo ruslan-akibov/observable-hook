@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { observable, autorun } from 'mobx';
 
+import { deepObserve } from 'mobx-utils';
+
 const OBSERVERS = Symbol('observers list');
 const AUTORUN_INSTANCE = Symbol('mobx autorun()');
 const STRINGIFY_CACHE = Symbol('JSON.stringify() cache');
@@ -25,7 +27,7 @@ export function use(source) {
             return
         }
 
-        source[STRINGIFY_CACHE] = null;
+// ?        source[STRINGIFY_CACHE] = null;
 
         source[AUTORUN_INSTANCE] = autorun(function () {
             const current = JSON.stringify(source);
@@ -58,6 +60,10 @@ export function use(source) {
 
     if (!invokeRender) {
         return source
+    }
+
+    if (!source[STRINGIFY_CACHE]) {
+        source[STRINGIFY_CACHE] = JSON.stringify(source); // ???
     }
 
     useEffect(function() {
