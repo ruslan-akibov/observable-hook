@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { observable, autorun } from 'mobx';
 
-import { deepObserve } from 'mobx-utils';
-
 const OBSERVERS = Symbol('observers list');
 const AUTORUN_INSTANCE = Symbol('mobx autorun()');
 const STRINGIFY_CACHE = Symbol('JSON.stringify() cache');
