@@ -1,0 +1,5 @@
+{
+  "main": "lib/index.js",
+  "name": "babel-plugin-dirty-observer",
+  "version": "0.0.1"
+}
