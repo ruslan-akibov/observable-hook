@@ -13,7 +13,8 @@ class TaskListBasic {
 
     // why
     async save() {
-        this.tasks = this.tasks.sort(( a, b ) => { return (( a.name < b.name )? 1 : -1) });
+        this.sort('name');
+
         await AJAX_store('todo-tasks', this.tasks)
     }
 
@@ -46,6 +47,12 @@ class TaskListBasic {
     async remove(id) {
         this.tasks = this.tasks.filter(t => t.id !== id);
         await this.save();
+    }
+
+    sort(field) {
+        this.tasks.sort(( a, b ) => {
+            return (( a[field] < b[field] )? 1 : -1)
+        });
     }
 }
 
