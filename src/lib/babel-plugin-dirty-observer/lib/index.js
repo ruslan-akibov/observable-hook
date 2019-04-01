@@ -76,6 +76,11 @@ if (typeof window !== 'undefined') {
         if (window.__r_a_17_) {
             window.__r_a_17_ = false;
 
+            /*  todo:
+                Not more than 3 stringify / sec
+                Not more than 2 callbacks / sec
+                Not more than 1 garbage-collector / 1
+            */
             setTimeout(function() {
                 window.requestAnimationFrame(function() {
                     for (var i = 0; i < observing.length; i++) {
@@ -122,6 +127,13 @@ if (typeof window !== 'undefined') {
             }) - 1;
         }
 
+        /*  fixme:
+            1. obj is observed already, stringification is planned already
+            2. data was changed recently
+            3. 'hook' was rendered with this data
+            4. data was changed again BACK TO PREVIOUS
+            5. 'hook' WILL NOT BE RENDERED since data 'not changed' - we don't observe changes between 'ticks'
+        */
         observing[idx].callbacks.push(callback);
 
         window.__r_a_17_ = true;
