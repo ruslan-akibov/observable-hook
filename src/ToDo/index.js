@@ -7,5 +7,10 @@ import Controller from './Controller';
 
 export default
 function() {
-    return <Controller />
+    return <>
+        <Controller />
+        <div style={{ position: 'absolute', right: 0 }}>
+            <Controller />
+        </div>
+    </>
 }

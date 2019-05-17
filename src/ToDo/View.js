@@ -1,4 +1,6 @@
 import React from 'react';
+
+// You could just use 'react-hoox' instead
 import { use } from 'observable-hook';
 
 import Model from './Model';
